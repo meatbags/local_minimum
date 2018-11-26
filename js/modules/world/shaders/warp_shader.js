@@ -2,10 +2,11 @@ const WarpShader = new THREE.ShaderMaterial({
   uniforms: {
     time: {value: 0.0},
     points: {value: []},
-    step: {value: 1.0},
+    step: {value: new THREE.Vector2(2, 0.5)},
     offset: {value: new THREE.Vector2()}
   },
   vertexShader: `
+    #define DEPTH_TO_RADIUS 1.0;
     uniform float time;
     uniform vec3 points[16];
     varying vec3 vP;
@@ -15,7 +16,7 @@ const WarpShader = new THREE.ShaderMaterial({
         return 0.0;
       } else {
         float mag = sqrt(pow(p1.x - p0.x, 2.0) + pow(p1.z - p0.z, 2.0));
-        float magMax = abs(p1.y) * 2.0;
+        float magMax = abs(p1.y) * DEPTH_TO_RADIUS;
         if (mag < magMax) {
           float t = 1.0 - mag / magMax;
           float easing = (t < 0.5) ? 2.0 * t * t : -1.0 + (4.0 - 2.0 * t) * t;
@@ -39,14 +40,14 @@ const WarpShader = new THREE.ShaderMaterial({
     #define GRID_THRESHOLD 0.06
     #define GRID_ALIAS 0.04
     uniform vec2 offset;
-    uniform float step;
+    uniform vec2 step;
     varying vec3 vP;
 
     float computeGridAlpha() {
-      float x = mod(vP.x + offset.x, step);
-      float z = mod(vP.z + offset.y, step);
-      x = x > step / 2.0 ? step - x : x;
-      z = z > step / 2.0 ? step - z : z;
+      float x = mod(vP.x + offset.x, step.x);
+      float z = mod(vP.z + offset.y, step.y);
+      x = x > step.x / 2.0 ? step.x - x : x;
+      z = z > step.y / 2.0 ? step.y - z : z;
       float xres = x < GRID_THRESHOLD ? ((GRID_THRESHOLD - x) / GRID_ALIAS) : 0.0;
       float zres = z < GRID_THRESHOLD ? ((GRID_THRESHOLD - z) / GRID_ALIAS) : 0.0;
       return min(1.0, xres + zres);

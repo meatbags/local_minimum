@@ -18,4 +18,8 @@ const randomRange = (min, max) => {
   return (max - min) * Math.random() + min;
 };
 
-export { blend, randomRange, easing };
+const clamp = (val, min, max) => {
+  return Math.max(min, Math.min(max, val));
+};
+
+export { blend, clamp, randomRange, easing };

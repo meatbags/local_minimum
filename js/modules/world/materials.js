@@ -42,7 +42,7 @@ class Materials {
 
   update(delta) {
     this.uniforms.time.value += delta;
-    this.uniforms.offset.value.y += delta * 5;
+    this.uniforms.offset.value.y += delta * -this.scene.player.velocity.z;
 
     // pass points to shader
     const len = this.scene.points.length;
