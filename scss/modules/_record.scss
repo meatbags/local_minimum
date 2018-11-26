@@ -1,0 +1,25 @@
+.record {
+  @include pad(0.5, 0.5);
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  user-select: none;
+  display: flex;
+
+  #record-button {
+    @include pad(1, 0.5);
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: $space * 2;
+
+    &.active {
+      border-color: red;
+    }
+  }
+  
+  #record-display {
+    font-size: $fontSmall;
+    @include pad(0.5, 0);
+  }
+}

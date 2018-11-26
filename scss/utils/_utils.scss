@@ -1,0 +1,13 @@
+@mixin pad($x, $y) {
+  padding-left: $x * $space;
+  padding-right: $x * $space;
+  padding-top: $y * $space;
+  padding-bottom: $y * $space;
+}
+
+@mixin margin($x, $y) {
+  margin-left: $x * $space;
+  margin-right: $x * $space;
+  margin-top: $y * $space;
+  margin-bottom: $y * $space;
+}

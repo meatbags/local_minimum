@@ -1,0 +1,44 @@
+# Written by MakeHuman 1.1.1
+version v1.1.1
+tags woman2
+camera 9.0 10.0 -0.129142866869 0.160123479997 0.0326583880842 1.225
+modifier stomach/stomach-tone-decr|incr 0.482000
+modifier macrodetails-universal/Muscle 0.517000
+modifier mouth/mouth-scale-horiz-decr|incr 0.198000
+modifier macrodetails/African 0.000000
+modifier macrodetails-proportions/BodyProportions 0.503000
+modifier breast/nipple-point-decr|incr -0.048000
+modifier neck/neck-scale-depth-decr|incr -0.266000
+modifier neck/neck-scale-horiz-decr|incr -0.062000
+modifier macrodetails/Gender 0.000000
+modifier head/head-angle-in|out 0.006000
+modifier macrodetails-height/Height 0.510000
+modifier breast/BreastSize 0.565000
+modifier mouth/mouth-scale-vert-decr|incr 0.170000
+modifier head/head-invertedtriangular 0.190000
+modifier nose/nose-base-down|up 0.184000
+modifier macrodetails/Age 0.500000
+modifier breast/BreastFirmness 0.769000
+modifier macrodetails/Asian 0.000000
+modifier nose/nose-scale-depth-decr|incr -0.238000
+modifier head/head-fat-decr|incr -0.470000
+modifier macrodetails/Caucasian 1.000000
+modifier nose/nose-curve-concave|convex -0.334000
+modifier nose/nose-scale-vert-decr|incr 0.006000
+modifier mouth/mouth-lowerlip-width-decr|incr 0.252000
+modifier nose/nose-compression-compress|uncompress -0.170000
+modifier breast/breast-dist-decr|incr -0.278000
+modifier mouth/mouth-upperlip-height-decr|incr 0.170000
+modifier nose/nose-point-down|up -0.006000
+modifier nose/nose-scale-horiz-decr|incr -0.034000
+modifier macrodetails-universal/Weight 0.122000
+modifier breast/breast-volume-vert-down|up 0.210000
+modifier pelvis/pelvis-tone-decr|incr 0.388000
+modifier mouth/mouth-scale-depth-decr|incr -0.278000
+modifier stomach/stomach-pregnant-decr|incr -0.606000
+skeleton game_engine.mhskel
+eyes HighPolyEyes 2c12f43b-1303-432c-b7ce-d78346baf2e6
+clothesHideFaces True
+skinMaterial skins/default.mhmat
+material HighPolyEyes 2c12f43b-1303-432c-b7ce-d78346baf2e6 eyes/materials/brown.mhmat
+subdivide False
