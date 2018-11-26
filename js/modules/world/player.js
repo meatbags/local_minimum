@@ -16,7 +16,7 @@ class Player {
     this.position = this.group.position;
     //this.light = new THREE.PointLight(0xffffff, 1, 5, 2);
     //this.light.position.y = 0.25;
-    //this.root.scene.add(this.group);
+    this.root.scene.add(this.group);
   }
 
   onKeyboard(key) {

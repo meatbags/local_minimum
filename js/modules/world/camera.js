@@ -12,7 +12,7 @@ class Camera {
     // set up three camera
     this.position = new THREE.Vector3();
     this.positionBlend = 0.1;
-    this.offset = new THREE.Vector3(0, 20, -12);
+    this.offset = new THREE.Vector3(0, 25, -15);
     this.aspectRatio = this.root.width / this.root.height;
     //this.orthoHeight = 5;
     //this.orthoWidth = this.orthoHeight * this.aspectRatio;

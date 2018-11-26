@@ -1,5 +1,5 @@
 {
-  "name": "blank-canvas",
+  "name": "local_minimum",
   "version": "1.0.0",
   "description": "",
   "main": "js/main.js",
@@ -9,11 +9,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meatbags/blank-canvas.git"
+    "url": "git+https://github.com/meatbags/local_minimum.git"
   },
   "author": "meatbags",
   "license": "ISC",
-  "homepage": "https://github.com/meatbags/blank-canvas#readme",
+  "homepage": "https://github.com/meatbags/local_minimum#readme",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.5",
