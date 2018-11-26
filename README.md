@@ -1,2 +1,3 @@
-# local_minimum
-webgl shmup scifi game
+# Local Minimum
+
+A browser-based SHMUP game.
