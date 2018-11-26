@@ -2,7 +2,7 @@ const WarpShader = new THREE.ShaderMaterial({
   uniforms: {
     time: {value: 0.0},
     points: {value: []},
-    step: {value: new THREE.Vector2(2, 0.5)},
+    step: {value: new THREE.Vector2(2, 0.75)},
     offset: {value: new THREE.Vector2()}
   },
   vertexShader: `
@@ -37,8 +37,8 @@ const WarpShader = new THREE.ShaderMaterial({
     }
   `,
   fragmentShader: `
-    #define GRID_THRESHOLD 0.06
-    #define GRID_ALIAS 0.04
+    #define GRID_THRESHOLD 0.08
+    #define GRID_ALIAS 0.08
     uniform vec2 offset;
     uniform vec2 step;
     varying vec3 vP;

@@ -21,7 +21,19 @@ class GravityNode {
     this.position.x = randomRange(-16, 16);
     this.position.y = this.height;
     this.position.z = -this.threshold;
-    this.velocity = new THREE.Vector3(0, 0, randomRange(1, 3));
+    this.velocity = new THREE.Vector3(0, 0, 0);
+  }
+
+  getPull(p) {
+    const d = 1;
+    const theta = Math.atan2(p.x - this.position.x, p.z - this.position.z);
+    const p0 = new THREE.Vector3(p.x - Math.sin(theta) * d, 0, p.z + Math.cos(theta) * d);
+    const p1 = new THREE.Vector3(p.x + Math.sin(theta) * d, 0, p.z - Math.cos(theta) * d);
+    p0.y = this.getHeight(p0);
+    p1.y = this.getHeight(p1);
+    p0.sub(p1);
+    p0.multiplyScalar(10);
+    return p0;
   }
 
   getHeight(p) {
