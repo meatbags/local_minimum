@@ -12,17 +12,18 @@ class Player {
     this.keyboard = new Keyboard(key => { this.onKeyboard(key); });
     this.keys = {up: false, down: false, left: false, right: false};
     this.mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(0.25, 32, 32), new THREE.MeshPhysicalMaterial({emissive: 0xffffff}));
-    this.offset = new THREE.Vector3(0, 0, -12);
     this.position = this.mesh.position;
+    this.node = new GravityParticle(this.position);
     this.root.scene.add(this.mesh);
   }
 
   update(delta) {
-    // calculate propulsion and add physics
     const z = (this.keys.up ? 1 : 0) + (this.keys.down ? -1 : 0);
-    const x = (this.keys.left ? -1 : 0) + (this.keys.right ? 1 : 0);
-    this.position.x += x * 16 * delta;
-    this.position.z += z * 12 * delta;
+    const x = (this.keys.left ? 1 : 0) + (this.keys.right ? -1 : 0);
+    const dx = x * 16;
+    const dz = 6 + z * 12;
+    this.node.boost(dx, 0, dz);
+    this.node.update(delta, this.root.gravityNodes);
 
     // limit
     this.position.x = clamp(this.position.x, -16, 16);

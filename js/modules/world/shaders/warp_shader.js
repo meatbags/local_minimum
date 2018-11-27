@@ -2,7 +2,7 @@ const WarpShader = new THREE.ShaderMaterial({
   uniforms: {
     time: {value: 0.0},
     points: {value: []},
-    step: {value: new THREE.Vector2(2, 1)},
+    step: {value: new THREE.Vector2(2, 0.75)},
     offset: {value: new THREE.Vector2()}
   },
   vertexShader: `

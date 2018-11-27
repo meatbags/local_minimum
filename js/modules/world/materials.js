@@ -22,16 +22,19 @@ class Materials {
 
   update(delta) {
     this.uniforms.time.value += delta;
-    this.uniforms.offset.value.y = -this.root.plane.position.z;
+    this.uniforms.offset.value.y = this.root.plane.position.z;
 
     // pass points to shader
     const nodeCount = this.scene.gravityNodes.length;
+    const offsetX = this.root.plane.position.x;
+    const offsetZ = this.root.plane.position.z;
     for (var i=0, lim=this.uniforms.points.value.length; i<lim; ++i) {
       if (i < nodeCount) {
-        this.uniforms.points.value[i].copy(this.scene.gravityNodes[i].position);
+        const p = this.scene.gravityNodes[i].position;
+        this.uniforms.points.value[i].set(p.x - offsetX, p.y, p.z - offsetZ);
       } else {
         // nullify
-        this.uniforms.points.value[i].y = 0;
+        this.uniforms.points.value[i].set(0, 0, 0);
       }
     }
   }

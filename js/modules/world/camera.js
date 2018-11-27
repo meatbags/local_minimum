@@ -12,11 +12,11 @@ class Camera {
     // set up three camera
     this.position = new THREE.Vector3();
     this.positionBlend = 0.1;
-    this.offset = new THREE.Vector3(0, 30, 25)
+    this.offset = new THREE.Vector3(0, 24, -18);
     this.aspectRatio = this.root.width / this.root.height;
     this.camera = new THREE.PerspectiveCamera(45, this.aspectRatio, 1, 1000);
     this.camera.position.copy(this.offset);
-    this.target = new THREE.Vector3(0, 0, 3.5);
+    this.target = new THREE.Vector3(0, 0, 6);
     this.camera.lookAt(this.target);
 
     //this.orthoHeight = 20;
@@ -42,7 +42,7 @@ class Camera {
   update(delta) {
     this.position.x = blend(this.position.x, this.player.position.x, this.positionBlend);
     this.position.y = blend(this.position.y, this.player.position.y, this.positionBlend);
-    this.position.z = this.player.position.z + this.player.offset.z;
+    this.position.z = this.player.position.z;
     this.camera.position.x = this.position.x + this.offset.x;
     this.camera.position.y = this.position.y + this.offset.y;
     this.camera.position.z = this.position.z + this.offset.z;
