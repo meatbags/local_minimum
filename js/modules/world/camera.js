@@ -44,7 +44,7 @@ class Camera {
     this.position.y = blend(this.position.y, this.player.position.y, this.positionBlend);
     this.position.z = this.player.position.z;
     this.camera.position.x = this.position.x + this.offset.x;
-    this.camera.position.y = this.position.y + this.offset.y;
+    //this.camera.position.y = this.position.y + this.offset.y;
     this.camera.position.z = this.position.z + this.offset.z;
   }
 }

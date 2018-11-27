@@ -21,10 +21,10 @@ class Renderer2D {
 
   draw(delta) {
     this.ctx.clearRect(0, 0, this.cvs.width, this.cvs.height);
-    const x = this.scene.player.position.x.toFixed(1);
-    const y = this.scene.player.position.y.toFixed(1);
-    const z = this.scene.player.position.z.toFixed(1);
-    this.ctx.fillText(`x ${x}, y ${y}, z ${z}`, 0, 20);
+    const p = this.scene.player.position;
+    this.ctx.fillText(`Px ${p.x.toFixed(1)}, y ${p.y.toFixed(1)}, z ${p.z.toFixed(1)}`, 0, 20);
+    const speed = this.scene.player.node.velocity.z + this.scene.player.node.inertia.z;
+    this.ctx.fillText(`Speed ${speed.toFixed(2)}`, 0, 40);
   }
 }
 
