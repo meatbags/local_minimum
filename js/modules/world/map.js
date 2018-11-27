@@ -8,7 +8,6 @@ import { Loader } from '../utils';
 class Map {
   constructor(root) {
     this.root = root;
-    this.scene = root.scene;
     this.materials = new Materials(this, 'assets');
     this.loader = new Loader('assets');
     this.loadScene();
@@ -16,23 +15,17 @@ class Map {
 
   loadScene() {
     // load maps
-    const mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(32, 32, 128, 128), this.materials.mat.grid);
-    mesh.rotation.x = Math.PI / -2;
-    mesh.updateMatrix();
-    mesh.geometry.applyMatrix(mesh.matrix);
-    mesh.rotation.x = 0;
-    this.scene.add(mesh);
-
-    /*
-    this.loader.loadFBX('map').then((map) => {
-      this.materials.conformObjectMaterials(map);
-      this.scene.add(map);
-    }, (err) => { console.log(err); });
-    */
+    this.plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(32, 32, 128, 128), this.materials.mat.grid);
+    this.plane.rotation.x = Math.PI / -2;
+    this.plane.updateMatrix();
+    this.plane.geometry.applyMatrix(this.plane.matrix);
+    this.plane.rotation.x = 0;
+    this.root.scene.add(this.plane);
   }
 
   update(delta) {
     this.materials.update(delta);
+    this.plane.position.z = this.root.player.position.z + this.root.player.offset.z;
   }
 }
 

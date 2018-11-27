@@ -2,12 +2,13 @@
  ** App entry point.
  **/
 
-import { Scene, Renderer, Recorder } from './modules';
+import { Scene, Renderer, Renderer2D, Recorder } from './modules';
 
 class App {
   constructor() {
     this.scene = new Scene();
     this.renderer = new Renderer(this.scene);
+    this.renderer2D = new Renderer2D(this.scene);
     this.now = performance.now();
     this.recorder = new Recorder(this);
     this.loop();
@@ -20,6 +21,7 @@ class App {
     this.now = t;
     this.scene.update(delta);
     this.renderer.draw(delta);
+    this.renderer2D.draw(delta);
     this.recorder.update();
   }
 }

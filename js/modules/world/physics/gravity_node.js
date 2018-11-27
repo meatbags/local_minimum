@@ -2,16 +2,14 @@
  ** World gravitation point.
  **/
 
-import { randomRange, easing } from '../utils/maths';
+import { randomRange, easing } from '../../utils/maths';
 
 class GravityNode {
   constructor(root) {
-    //this.mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 16, 16), new THREE.MeshBasicMaterial({color: 0xffffff}));
     this.position = new THREE.Vector3();
     this.reset();
     this.position.z = randomRange(-16, 16);
     this.root = root;
-    //root.scene.add(this.mesh);
   }
 
   reset() {
@@ -42,11 +40,13 @@ class GravityNode {
   }
 
   update(delta) {
+    /*
     this.position.x += this.velocity.x * delta;
     this.position.z += (this.root.player.velocity.z + this.velocity.z) * delta;
     if (this.position.z > this.threshold || Math.abs(this.position.x) > this.threshold) {
       this.reset();
     }
+    */
   }
 }
 

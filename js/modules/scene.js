@@ -16,9 +16,9 @@ class Scene {
     this.map = new Map(this);
 
     // points
-    this.points = [];
+    this.gravityNodes = [];
     for (var i=0; i<16; i++) {
-      this.points.push(new GravityNode(this));
+      this.gravityNodes.push(new GravityNode(this));
     }
 
     // events
@@ -36,7 +36,7 @@ class Scene {
   }
 
   update(delta) {
-    this.points.forEach(p => { p.update(delta); });
+    this.gravityNodes.forEach(p => { p.update(delta); });
     this.player.update(delta);
     this.camera.update(delta);
     this.map.update(delta);

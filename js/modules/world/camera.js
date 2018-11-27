@@ -40,13 +40,12 @@ class Camera {
   }
 
   update(delta) {
-    //this.position.x = blend(this.position.x, this.player.position.x, this.positionBlend);
-    //this.position.y = blend(this.position.y, this.player.position.y, this.positionBlend);
-    //this.position.z = blend(this.position.z, this.player.position.z, this.positionBlend);
-    //this.camera.position.x = this.position.x + this.offset.x;
-    //this.camera.position.y = this.position.y + this.offset.y;
-    //this.camera.position.z = this.position.z + this.offset.z;
-    //this.camera.lookAt(this.target);
+    this.position.x = blend(this.position.x, this.player.position.x, this.positionBlend);
+    this.position.y = blend(this.position.y, this.player.position.y, this.positionBlend);
+    this.position.z = this.player.position.z + this.player.offset.z;
+    this.camera.position.x = this.position.x + this.offset.x;
+    this.camera.position.y = this.position.y + this.offset.y;
+    this.camera.position.z = this.position.z + this.offset.z;
   }
 }
 

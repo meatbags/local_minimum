@@ -22,4 +22,8 @@ const clamp = (val, min, max) => {
   return Math.max(min, Math.min(max, val));
 };
 
-export { blend, clamp, randomRange, easing };
+const posterise = (val, step) => {
+  return Math.round(val / step) * step;
+}
+
+export { blend, clamp, randomRange, easing, posterise };
