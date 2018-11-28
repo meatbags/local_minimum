@@ -9,6 +9,7 @@ class GravityParticle {
     this.position = position;
     this.jumpThreshold = 1.2;
     this.gravity = 2;
+    this.airResistance = 0.02;
     this.up = new THREE.Vector3(0, 1, 0);
     this.surface = this.up;
     this.velocity = new THREE.Vector3();
@@ -23,6 +24,10 @@ class GravityParticle {
     if (this.position.y - this.floor < this.jumpThreshold) {
       this.inertia.y += y;
     }
+  }
+
+  getSpeed() {
+    return this.velocity.z + this.inertia.z;
   }
 
   update(delta, nodes) {
@@ -57,6 +62,9 @@ class GravityParticle {
       this.inertia.z = blend(this.inertia.z, vz, 0.05);
     } else {
       this.inertia.y -= this.gravity;
+      if (this.position.y > this.floor) {
+        this.inertia.z -= this.inertia.z * this.airResistance;
+      }
     }
 
     // limit

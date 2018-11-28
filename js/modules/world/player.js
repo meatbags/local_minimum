@@ -24,9 +24,22 @@ class Player {
     this.jumpLock = {active: false, time: 0, timeout: 0.5, dir: 1};
     this.node = new GravityParticle(this.position);
     this.root.scene.add(this.mesh, this.ref);
+    this.stat = {hp: 100, speed: 0, maxSpeed: 0, points: 0, maxHeight: 0};
   }
 
   update(delta) {
+    this.move(delta);
+    this.status();
+  }
+
+  status() {
+    this.stat.speed = this.node.getSpeed();
+    this.stat.maxSpeed = Math.max(this.stat.maxSpeed, this.stat.speed);
+    this.stat.maxHeight = Math.max(this.stat.maxHeight, this.position.y);
+    this.points += 1;
+  }
+
+  move(delta) {
     // move
     const z = (this.keys.up ? 1 : 0) + (this.keys.down ? -1 : 0);
     const x = (this.keys.left ? 1 : 0) + (this.keys.right ? -1 : 0);
