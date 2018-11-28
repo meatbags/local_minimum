@@ -26,4 +26,8 @@ const posterise = (val, step) => {
   return Math.round(val / step) * step;
 }
 
-export { blend, clamp, randomRange, easing, posterise };
+const minAngleBetween = (a, b) => {
+  return Math.atan2(Math.sin(b - a), Math.cos(b - a));
+}
+
+export { blend, clamp, easing, minAngleBetween, posterise, randomRange };

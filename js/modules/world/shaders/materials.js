@@ -2,7 +2,7 @@
  ** Handle materials and shaders.
  **/
 
-import { WarpShader } from './shaders';
+import { WarpShader } from './warp_shader';
 
 class Materials {
   constructor(root, path) {

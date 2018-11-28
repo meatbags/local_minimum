@@ -24,7 +24,7 @@ class Renderer2D {
     const p = this.scene.player.position;
     this.ctx.fillText(`Px ${p.x.toFixed(1)}, y ${p.y.toFixed(1)}, z ${p.z.toFixed(1)}`, 0, 20);
     const speed = this.scene.player.node.velocity.z + this.scene.player.node.inertia.z;
-    this.ctx.fillText(`Speed ${speed.toFixed(2)}`, 0, 40);
+    this.ctx.fillText(`Speed ${Math.floor(speed * 100)} Sanics`, 0, 40);
   }
 }
 

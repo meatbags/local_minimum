@@ -4,7 +4,7 @@
 
 import { Keyboard } from '../utils';
 import { GravityParticle } from './physics';
-import { blend, clamp } from '../utils/maths';
+import { blend, clamp, minAngleBetween } from '../utils/maths';
 
 class Player {
   constructor(root) {
@@ -14,7 +14,13 @@ class Player {
     this.mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(2, 0.125, 0.5), new THREE.MeshPhysicalMaterial({emissive: 0xffffff}));
     this.ref = new THREE.Mesh(new THREE.BoxBufferGeometry(0.1, 1, 0.1), new THREE.MeshPhysicalMaterial({emissive: 0x444444}));
     this.position = this.mesh.position;
-    this.speed = {current: new THREE.Vector3(), y: {max: 30}, x: {max: 10, blend: 0.125}, z: {base: 12, max: 22, min: 8, blend: 0.125}};
+    this.speed = {
+      current: new THREE.Vector3(),
+      x: {max: 10, blend: 0.125},
+      y: {max: 30},
+      z: {base: 12, max: 22, min: 8, blend: 0.05},
+      rotation: {}
+    };
     this.jumpLock = {active: false, time: 0, timeout: 0.5, dir: 1};
     this.node = new GravityParticle(this.position);
     this.root.scene.add(this.mesh, this.ref);

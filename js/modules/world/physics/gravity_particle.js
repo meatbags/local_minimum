@@ -46,12 +46,15 @@ class GravityParticle {
     if (this.position.y < this.floor) {
       this.position.y = this.floor;
       this.surface = res == null ? this.up : res.getNormal(this.position);
-      this.inertia.x = this.surface.x * 10;
-      const v = this.velocity.clone();
-      v.projectOnPlane(this.surface);
-      this.inertia.y = v.y * 4;
-      const vz = Math.max(0, v.z * this.surface.z * 10) + Math.abs(this.surface.x * 10);
-      this.inertia.z = blend(this.inertia.z, vz , 0.05);
+      const proj = this.velocity.clone();
+      proj.projectOnPlane(this.surface);
+      const vx = this.surface.x * 10;
+      const vy = proj.y * 4;
+      const sign = Math.sign(this.velocity.z);
+      const vz = (sign === 1 ? Math.max(0, proj.z * this.surface.z * 10): Math.min(0, proj.z * this.surface.z * 10)) + Math.abs(vx * 2) * sign;
+      this.inertia.x = vx;
+      this.inertia.y = vy;
+      this.inertia.z = blend(this.inertia.z, vz, 0.05);
     } else {
       this.inertia.y -= this.gravity;
     }

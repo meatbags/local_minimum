@@ -2,7 +2,7 @@
  ** Handle map logic.
  **/
 
-import { Materials } from './materials';
+import { Materials } from './shaders';
 import { Loader } from '../utils';
 
 class Map {
