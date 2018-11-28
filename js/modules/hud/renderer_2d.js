@@ -3,7 +3,7 @@
  **/
 
 class Renderer2D {
-  constructor(scene) {
+  constructor() {
     this.cvs = document.createElement('canvas');
     this.ctx = this.cvs.getContext('2d');
     this.cvs.width = window.innerWidth;
@@ -11,8 +11,10 @@ class Renderer2D {
     document.querySelector('#canvas-target').append(this.cvs);
     window.addEventListener('resize', () => { this.resize(); });
     this.stat = {speed: 0, maxSpeedometer: 30, hp: 0};
+    this.arc = {radius: 80};
     this.colour = {light: '#fff', dark: '#444'};
-    this.font = {large: '32px Karla', small: '12px Karla'};
+    this.font = {score: '18px Karla', large: '32px Karla', small: '12px Karla'};
+    this.lineWidth = {fat: 50, thin: 4};
   }
 
   resize() {
@@ -20,25 +22,39 @@ class Renderer2D {
     this.cvs.height = window.innerHeight;
   }
 
-  setStyle() {
-    this.ctx.textAlign = 'center';
-    this.ctx.lineWidth = 50;
-  }
-
   clear() {
     this.ctx.clearRect(0, 0, this.cvs.width, this.cvs.height);
-    this.setStyle();
+  }
+
+  billboardText(text, x, y) {
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText(text, x, y);
+  }
+
+  drawScore(score) {
+    this.ctx.textAlign = 'right';
+    this.ctx.font = this.font.score;
+    this.ctx.lineWidth = this.lineWidth.thin;
+    this.ctx.strokeStyle = this.colour.light;
+    const text = `${score} POINTS`
+    const x = this.cvs.width - 75;
+    const y = this.cvs.height - 50;
+    //this.ctx.strokeText(text, x, y);
+    this.ctx.fillStyle = this.colour.light;
+    this.ctx.fillText(text, x, y);
   }
 
   drawArcBar(x, y, t, label, subLabel) {
     const start = Math.PI * 0.75;
+    this.ctx.textAlign = 'center';
     this.ctx.strokeStyle = this.colour.dark;
+    this.ctx.lineWidth = this.lineWidth.fat;
     this.ctx.beginPath();
-    this.ctx.arc(x, y, 100, start, Math.PI * 2, false);
+    this.ctx.arc(x, y, this.arc.radius, start, Math.PI * 2, false);
     this.ctx.stroke();
     this.ctx.strokeStyle = this.colour.light;
     this.ctx.beginPath();
-    this.ctx.arc(x, y, 100, start, start + t * Math.PI * 1.25, false);
+    this.ctx.arc(x, y, this.arc.radius, start, start + t * Math.PI * 1.25, false);
     this.ctx.stroke();
     this.ctx.fillStyle = this.colour.light;
     this.ctx.font = this.font.large;

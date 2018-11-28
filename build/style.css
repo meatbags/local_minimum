@@ -84,7 +84,8 @@ body {
 
 .canvas-wrapper {
   width: 100%;
-  height: 100vh; }
+  height: 100vh;
+  cursor: crosshair; }
   .canvas-wrapper canvas {
     position: absolute;
     top: 0;

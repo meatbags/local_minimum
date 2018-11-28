@@ -2,7 +2,9 @@
  * 3D scene handler.
  **/
 
-import { Camera, Lighting, Map, Player, GravityNode } from './world';
+import { Camera, Map, Player, ObjectHandler } from './world';
+import { GravityNode } from './physics';
+import { Lighting } from './shaders';
 import { randomRange } from './utils/maths';
 
 class Scene {

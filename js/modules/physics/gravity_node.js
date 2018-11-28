@@ -2,7 +2,7 @@
  ** World gravitation point.
  **/
 
-import { randomRange, easing } from '../../utils/maths';
+import { randomRange, easing } from '../utils/maths';
 
 class GravityNode {
   constructor(root) {

@@ -2,18 +2,20 @@
  ** Interact with gravity nodes.
  **/
 
-import { easing, blend } from '../../utils/maths';
+import { easing, blend } from '../utils/maths';
 
 class GravityParticle {
   constructor(position) {
     this.position = position;
     this.jumpThreshold = 1.2;
     this.gravity = 2;
-    this.airResistance = 0.02;
+    this.airResistance = 0.01;
     this.up = new THREE.Vector3(0, 1, 0);
     this.surface = this.up;
     this.velocity = new THREE.Vector3();
     this.inertia = new THREE.Vector3();
+    this.blend = {inertia: {z: 0.1}};
+    this.scale = {inertia: {x: 10, y: 4, z: 10}};
   }
 
   setVelocity(v) {
@@ -53,13 +55,13 @@ class GravityParticle {
       this.surface = res == null ? this.up : res.getNormal(this.position);
       const proj = this.velocity.clone();
       proj.projectOnPlane(this.surface);
-      const vx = this.surface.x * 10;
-      const vy = proj.y * 4;
+      const vx = this.surface.x * this.scale.inertia.x;
+      const vy = proj.y * this.scale.inertia.y;
       const sign = Math.sign(this.velocity.z);
-      const vz = (sign === 1 ? Math.max(0, proj.z * this.surface.z * 10): Math.min(0, proj.z * this.surface.z * 10)) + Math.abs(vx * 2) * sign;
+      const vz = (sign === 1 ? Math.max(0, proj.z * this.surface.z * this.scale.inertia.z): Math.min(0, proj.z * this.surface.z * this.scale.inertia.z)) + Math.abs(vx * 2) * sign;
       this.inertia.x = vx;
       this.inertia.y = vy;
-      this.inertia.z = blend(this.inertia.z, vz, 0.05);
+      this.inertia.z = blend(this.inertia.z, vz, this.blend.inertia.z);
     } else {
       this.inertia.y -= this.gravity;
       if (this.position.y > this.floor) {

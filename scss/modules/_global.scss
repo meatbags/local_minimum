@@ -41,16 +41,3 @@ body {
 #dev-reset {
 	cursor: pointer;
 }
-
-.canvas-wrapper {
-	width: 100%;
-	height: 100vh;
-
-	canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-		margin: 0;
-		padding: 0;
-	}
-}

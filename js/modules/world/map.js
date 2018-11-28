@@ -2,15 +2,19 @@
  ** Handle map logic.
  **/
 
-import { Materials } from './shaders';
+import { Materials } from '../shaders';
 import { Loader } from '../utils';
+import { TestObject } from './objects';
+import { randomRange } from '../utils/maths';
 
 class Map {
   constructor(root) {
     this.root = root;
     this.materials = new Materials(this, 'assets');
     this.loader = new Loader('assets');
-    this.offset = new THREE.Vector3(0, 0, 12);
+    this.offset = new THREE.Vector3(0, 0, 13);
+    this.objects = [];
+    this.age = 0;
     this.loadScene();
   }
 
@@ -32,6 +36,24 @@ class Map {
   update(delta) {
     this.materials.update(delta);
     this.plane.position.z = this.root.player.position.z + this.offset.z;
+
+    // test objects
+    this.age += delta;
+    if (this.age > 0.25) {
+      this.age -= 0.25;
+      const p = new THREE.Vector3(randomRange(-16, 16), 0, this.plane.position.z + 16);
+      const obj = new TestObject(this, p);
+      this.objects.push(obj);
+    }
+
+    for (var i=this.objects.length-1, lim=-1; i>lim; --i) {
+      const obj = this.objects[i];
+      obj.update(delta);
+
+      if (!obj.active) {
+        this.objects.splice(i, 1);
+      }
+    }
   }
 }
 
