@@ -17,6 +17,7 @@ class GravityParticle {
     this.limit = {negx: -16, posx: 16};
     this.blend = {inertia: {z: 6}}; // 0.1
     this.scale = {inertia: {x: 5, y: 4, z: 9}};
+    this.scale.inertia.x2z = this.scale.inertia.z / this.scale.inertia.x;
   }
 
   setVelocity(v) {
@@ -83,7 +84,7 @@ class GravityParticle {
     if (this.position.y < this.floor) {
       this.position.y = this.floor;
     } else {
-      this.inertia.y -= this.constants.gravity;
+      this.inertia.y -= this.constants.gravity * delta;
     }
 
     // limit
@@ -104,7 +105,7 @@ class GravityParticle {
       const vy = proj.y * this.scale.inertia.y;
       const sign = Math.sign(this.velocity.z);
       let vz = proj.z * this.surface.z * this.scale.inertia.z;
-      vz = (sign == 1 ? Math.max(0, vz) : Math.min(0, vz)) + Math.abs(vx * 1.5) * sign;
+      vz = (sign == 1 ? Math.max(0, vz) : Math.min(0, vz)) + Math.abs(vx * this.scale.inertia.x2z) * sign;
       this.inertia.x = vx;
       this.inertia.y = vy;
       this.inertia.z = blend(this.inertia.z, vz, Math.min(1, delta * this.blend.inertia.z));

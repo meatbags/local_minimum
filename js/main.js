@@ -17,7 +17,7 @@ class App {
   loop() {
     requestAnimationFrame(() => { this.loop(); });
     const t = performance.now();
-    const delta = Math.min((t - this.now) / 1000, 1);
+    const delta = Math.min((t - this.now) / 1000, 0.5);
     this.now = t;
     this.scene.update(delta);
     this.renderer.draw(delta);
