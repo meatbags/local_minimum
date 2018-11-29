@@ -2,7 +2,7 @@ const WarpShader = new THREE.ShaderMaterial({
   uniforms: {
     time: {value: 0.0},
     points: {value: []},
-    step: {value: new THREE.Vector2(2, 0.75)},
+    step: {value: new THREE.Vector2(2, 1.5)},
     offset: {value: new THREE.Vector2()}
   },
   vertexShader: `
@@ -38,19 +38,22 @@ const WarpShader = new THREE.ShaderMaterial({
   `,
   fragmentShader: `
     #define GRID_THRESHOLD 0.08
-    #define GRID_ALIAS 0.08
+    #define GRID_ALIAS 0.04
+    #define ODD_COLOUR 0.35
     uniform vec2 offset;
     uniform vec2 step;
     varying vec3 vP;
 
     float computeGridAlpha() {
+      float cell = floor((vP.x + offset.x) / step.x) + floor((vP.z + offset.y) / step.y);
+      float base = (mod(cell, 2.0) > 0.5) ? ODD_COLOUR : 0.0;
       float x = mod(vP.x + offset.x, step.x);
       float z = mod(vP.z + offset.y, step.y);
       x = x > step.x / 2.0 ? step.x - x : x;
       z = z > step.y / 2.0 ? step.y - z : z;
       float xres = x < GRID_THRESHOLD ? ((GRID_THRESHOLD - x) / GRID_ALIAS) : 0.0;
       float zres = z < GRID_THRESHOLD ? ((GRID_THRESHOLD - z) / GRID_ALIAS) : 0.0;
-      return min(1.0, xres + zres);
+      return min(1.0, max(base, xres + zres));
     }
 
     void main() {
