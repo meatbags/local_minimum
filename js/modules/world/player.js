@@ -4,6 +4,7 @@
 
 import { Keyboard, Mouse } from '../utils';
 import { GravityParticle } from '../physics';
+import { TestBullet } from './objects';
 import { blend, clamp, minAngleBetween } from '../utils/maths';
 
 class Player {
@@ -30,7 +31,7 @@ class Player {
       current: new THREE.Vector3(),
       x: {max: 10, blend: 0.125},
       y: {max: 30},
-      z: {base: 12, max: 22, min: 8, blend: 0.05},
+      z: {base: 10, max: 20, min: 5, blend: 0.04},
       rotation: {}
     };
     this.jumpLock = {active: false, time: 0, timeout: 0.5, dir: 1};
@@ -41,15 +42,17 @@ class Player {
   }
 
   resetStatus() {
-    this.stat = {hp: 100, time: 0, speed: 0, maxSpeed: 0, score: 0, maxHeight: 0};
+    this.stat = {multiplier: 1, hp: 100, time: 0, speed: 0, maxSpeed: 0, speedIncrement: 0, score: 0, maxHeight: 0};
   }
 
   status(delta) {
     this.stat.time += delta;
     this.stat.speed = this.node.getSpeed();
+    this.stat.multiplier = Math.max(1, this.stat.speed / 30);
     this.stat.maxSpeed = Math.max(this.stat.maxSpeed, this.stat.speed);
     this.stat.maxHeight = Math.max(this.stat.maxHeight, this.position.y);
-    this.stat.score = Math.floor(this.stat.time * 15);
+    this.stat.score = Math.floor(this.stat.time * 10 * this.stat.multiplier);
+    this.stat.speedIncrement = Math.min(5, this.stat.time / 30);
   }
 
   update(delta) {
@@ -62,15 +65,10 @@ class Player {
     }
 
     if (this.bullets) {
-      for (var i=this.bullets.length-1, lim=-1; i>lim; --i) {
-        const b = this.bullets[i];
-        b.p.x += b.v.x * delta;
-        b.p.y += b.v.y * delta;
-        b.p.z += b.v.z * delta;
-        b.age += delta;
-        if (b.age > 0.75) {
+      for (var i=this.bullets.length-1; i>-1; --i) {
+        this.bullets[i].update(delta);
+        if (!this.bullets[i].active) {
           this.bullets.splice(i, 1);
-          this.root.scene.remove(b.mesh);
         }
       }
     }
@@ -78,10 +76,11 @@ class Player {
 
   move(delta) {
     // move
-    const z = (this.keys.up ? 1 : 0) + (this.keys.down ? -1 : 0);
     const x = (this.keys.left ? 1 : 0) + (this.keys.right ? -1 : 0);
+    const z = (this.keys.up ? 1 : 0) + (this.keys.down ? -1 : 0);
+    const sz = (z == 1 ? this.speed.z.max : (z == -1 ? this.speed.z.min : this.speed.z.base)) + this.stat.speedIncrement;
     this.speed.current.x = blend(this.speed.current.x, x * this.speed.x.max, this.speed.x.blend);
-    this.speed.current.z = blend(this.speed.current.z, z == 1 ? this.speed.z.max : (z == -1 ? this.speed.z.min : this.speed.z.base), this.speed.z.blend);
+    this.speed.current.z = blend(this.speed.current.z, sz, this.speed.z.blend);
 
     // jump
     if (this.jumpLock.active) {
@@ -99,9 +98,9 @@ class Player {
       this.jumpLock.dir = this.speed.current.x > 0 ? -1 : 1;
     }
 
-    // process against gravity nodes
+    // move on plane
     this.node.setVelocity(this.speed.current);
-    this.node.update(delta, this.root.gravityNodes);
+    this.node.move(delta, this.root.gravityNodes);
 
     // rotate model
     const jumpAnim = this.jumpLock.active ? (this.jumpLock.time / this.jumpLock.timeout) * Math.PI * 2 * this.jumpLock.dir : 0;
@@ -119,7 +118,7 @@ class Player {
     const t = (new Date()).getTime();
     if (this.bulletTimeout === undefined || t > this.bulletTimeout) {
       // timeout
-      this.bulletTimeout = t + 50;
+      this.bulletTimeout = t + 200;
 
       // get mouse position
       const mouse = new THREE.Vector2(
@@ -131,28 +130,24 @@ class Player {
 
       // create bullet
       if (res.length) {
-        const target = res[0].point;
-        const bullet = {};
-        bullet.age = 0;
-        bullet.mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2, 1, 0.2), new THREE.MeshBasicMaterial({}));
-        bullet.mesh.position.copy(this.position);
-        bullet.p = bullet.mesh.position;
-        bullet.v = target.clone();
-        bullet.v.sub(bullet.p);
-        bullet.v.normalize();
-        bullet.v.multiplyScalar(40);
-
-        // add velocity
-        const pv = this.node.velocity.clone();
-        pv.projectOnVector(bullet.v);
-        bullet.v.add(pv);
-
-        // add bullet
         if (!this.bullets) {
           this.bullets = [];
         }
-        this.bullets.push(bullet);
-        this.root.scene.add(bullet.mesh);
+        const target = res[0].point;
+        const dx = target.x - this.position.x;
+        const dz = target.z - this.position.z;
+        const theta = Math.atan2(dx, dz);
+        const mag = Math.hypot(dx, dz);
+        const target2 = target.clone();
+        const target3 = target.clone();
+        const off = Math.PI / 24;
+        target2.z = this.position.z + Math.cos(theta + off) * mag;
+        target2.x = this.position.x + Math.sin(theta + off) * mag;
+        target3.z = this.position.z + Math.cos(theta - off) * mag;
+        target3.x = this.position.x + Math.sin(theta - off) * mag;
+        this.bullets.push(new TestBullet(this.root, this.position, target));
+        this.bullets.push(new TestBullet(this.root, this.position, target2));
+        this.bullets.push(new TestBullet(this.root, this.position, target3));
       }
     }
   }

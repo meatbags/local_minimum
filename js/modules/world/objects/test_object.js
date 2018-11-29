@@ -19,13 +19,12 @@ class TestObject {
     // physics
     this.position = this.group.position;
     this.position.copy(p);
-    this.velocity = new THREE.Vector3(0, 0, 8);
-    this.node = new GravityParticle(this.position);
-    this.node.setVelocity(this.velocity);
+    this.velocity = new THREE.Vector3(0, 0, 10);
+    this.node = new GravityParticle(this.position, this.velocity);
   }
 
   update(delta) {
-    this.node.update(delta, this.sceneRef.gravityNodes);
+    this.node.move(delta, this.sceneRef.gravityNodes);
 
     if (this.position.z < this.root.plane.position.z - 16) {
       this.destroy();

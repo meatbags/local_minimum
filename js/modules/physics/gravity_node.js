@@ -20,7 +20,7 @@ class GravityNode {
 
   reset(dir) {
     const centreZ = this.root.map.plane.position.z;
-    this.floor = (Math.random() < 0.97) ? randomRange(-12, -1.5) : randomRange(-20, -10);
+    this.floor = (Math.random() < 0.97) ? randomRange(-14, -2) : randomRange(-20, -10);
     this.setRadius();
     this.position.x = randomRange(-16, 16);
     this.position.z = centreZ + this.threshold * dir;

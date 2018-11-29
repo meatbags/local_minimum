@@ -39,8 +39,8 @@ class Map {
 
     // test objects
     this.age += delta;
-    if (this.age > 0.25) {
-      this.age -= 0.25;
+    if (this.age > 1) {
+      this.age -= 1;
       const p = new THREE.Vector3(randomRange(-16, 16), 0, this.plane.position.z + 16);
       const obj = new TestObject(this, p);
       this.objects.push(obj);

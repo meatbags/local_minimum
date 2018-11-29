@@ -10,6 +10,7 @@ const WarpShader = new THREE.ShaderMaterial({
     uniform float time;
     uniform vec3 points[16];
     varying vec3 vP;
+    varying vec2 vUV;
 
     float computeHeight(vec3 p0, vec3 p1) {
       if (p1.y == 0.0) {
@@ -29,6 +30,7 @@ const WarpShader = new THREE.ShaderMaterial({
 
     void main() {
       vP = position;
+      vUV = uv;
       vP.y = 0.0;
       for (int i=0; i<16; ++i) {
         vP.y = min(vP.y, computeHeight(position, points[i]));
@@ -39,10 +41,13 @@ const WarpShader = new THREE.ShaderMaterial({
   fragmentShader: `
     #define GRID_THRESHOLD 0.08
     #define GRID_ALIAS 0.04
-    #define ODD_COLOUR 0.35
+    #define ODD_COLOUR 0.5
+    #define PI 3.14159
     uniform vec2 offset;
     uniform vec2 step;
+    uniform float time;
     varying vec3 vP;
+    varying vec2 vUV;
 
     float computeGridAlpha() {
       float cell = floor((vP.x + offset.x) / step.x) + floor((vP.z + offset.y) / step.y);
@@ -57,7 +62,12 @@ const WarpShader = new THREE.ShaderMaterial({
     }
 
     void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, computeGridAlpha());
+      float r = vUV.y;
+      float b = 0.25 + (1.0 - vUV.y) * 0.75;
+      float phase = 0.55 + 0.45 * sin(time * PI * 0.25);
+      float t = clamp(-(vP.y / 10.0), 0.0, 1.0);
+      vec3 res = mix(vec3(0.33, 0.33, b), vec3(phase, 1.0 - phase, 0.0), t);
+      gl_FragColor = vec4(res, computeGridAlpha());
     }
   `
 });

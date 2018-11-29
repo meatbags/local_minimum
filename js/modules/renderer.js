@@ -53,8 +53,8 @@ class Renderer {
   }
 
   draw(delta) {
-    //this.composer.render(delta);
-    this.renderer.render(this.scene, this.camera);
+    this.composer.render(delta);
+    //this.renderer.render(this.scene, this.camera);
   }
 }
 
