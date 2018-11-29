@@ -4,7 +4,7 @@
 
 import { Keyboard, Mouse } from '../utils';
 import { GravityParticle } from '../physics';
-import { TestBullet } from './objects';
+import { Bullet } from './objects';
 import { blend, clamp, minAngleBetween } from '../utils/maths';
 
 class Player {
@@ -63,15 +63,6 @@ class Player {
     if (this.mouse.active) {
       this.shoot();
     }
-
-    if (this.bullets) {
-      for (var i=this.bullets.length-1; i>-1; --i) {
-        this.bullets[i].update(delta);
-        if (!this.bullets[i].active) {
-          this.bullets.splice(i, 1);
-        }
-      }
-    }
   }
 
   move(delta) {
@@ -118,7 +109,7 @@ class Player {
     const t = (new Date()).getTime();
     if (this.bulletTimeout === undefined || t > this.bulletTimeout) {
       // timeout
-      this.bulletTimeout = t + 200;
+      this.bulletTimeout = t + 50;
 
       // get mouse position
       const mouse = new THREE.Vector2(
@@ -134,6 +125,8 @@ class Player {
           this.bullets = [];
         }
         const target = res[0].point;
+        this.root.map.add(new Bullet(this.root, this.position, target))
+        /*
         const dx = target.x - this.position.x;
         const dz = target.z - this.position.z;
         const theta = Math.atan2(dx, dz);
@@ -145,9 +138,9 @@ class Player {
         target2.x = this.position.x + Math.sin(theta + off) * mag;
         target3.z = this.position.z + Math.cos(theta - off) * mag;
         target3.x = this.position.x + Math.sin(theta - off) * mag;
-        this.bullets.push(new TestBullet(this.root, this.position, target));
         this.bullets.push(new TestBullet(this.root, this.position, target2));
         this.bullets.push(new TestBullet(this.root, this.position, target3));
+        */
       }
     }
   }

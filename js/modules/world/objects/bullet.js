@@ -3,13 +3,14 @@
  **/
 
 import { GravityParticle } from '../../physics';
+import { Explosion } from './explosion';
 
-class TestBullet {
+class Bullet {
   constructor(sceneRef, position, target) {
     this.active = true;
     this.sceneRef = sceneRef;
     this.age = 0;
-    this.maxAge = 1;
+    this.maxAge = 0.6 + Math.random() * 0.8;
     this.mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(0.25, 12, 12), new THREE.MeshBasicMaterial({}));
     this.mesh.position.copy(position);
     this.position = this.mesh.position;
@@ -32,19 +33,23 @@ class TestBullet {
   }
 
   update(delta) {
-    this.age += delta;
-    if (this.age > this.maxAge) {
-      this.destroy();
-    }
+    if (this.active) {
+      this.age += delta;
+      if (this.age > this.maxAge) {
+        this.destroy();
+      }
 
-    // move
-    this.node.snap(delta, this.sceneRef.gravityNodes);
+      // move
+      this.node.snap(delta, this.sceneRef.gravityNodes);
+    }
   }
 
   destroy() {
     this.sceneRef.scene.remove(this.mesh);
     this.active = false;
+    const parts = 2 + Math.floor(Math.random() * 3);
+    this.sceneRef.map.add(new Explosion(this.sceneRef, this.position, this.velocity, parts));
   }
 }
 
-export { TestBullet };
+export { Bullet };

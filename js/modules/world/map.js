@@ -33,11 +33,16 @@ class Map {
     this.root.scene.add(this.ref);
   }
 
+  add(obj) {
+    this.objects.push(obj);
+  }
+
   update(delta) {
     this.materials.update(delta);
     this.plane.position.z = this.root.player.position.z + this.offset.z;
 
     // test objects
+    /*
     this.age += delta;
     if (this.age > 1) {
       this.age -= 1;
@@ -45,11 +50,11 @@ class Map {
       const obj = new TestObject(this, p);
       this.objects.push(obj);
     }
+    */
 
     for (var i=this.objects.length-1, lim=-1; i>lim; --i) {
       const obj = this.objects[i];
       obj.update(delta);
-
       if (!obj.active) {
         this.objects.splice(i, 1);
       }

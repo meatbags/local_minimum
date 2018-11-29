@@ -36,6 +36,8 @@ class HUD {
     const p = this.getScreenPosition(this.player.position);
     this.renderer.billboardText('p1', p.x, p.y - 10);
 
+    this.renderer.drawText(this.scene.map.objects.length, this.renderer.cvs.width - 75, this.renderer.cvs.height - 70);
+
     // draw HUD
     this.renderer.drawSpeed(this.player.stat.speed);
     this.renderer.drawHP(this.player.stat.hp);

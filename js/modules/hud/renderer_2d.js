@@ -31,9 +31,16 @@ class Renderer2D {
     this.ctx.fillText(text, x, y);
   }
 
+  drawText(text, x, y) {
+    this.ctx.textAlign = 'right';
+    this.ctx.font = this.font.text;
+    this.ctx.fillStyle = this.colour.light;
+    this.ctx.fillText(text, x, y);
+  }
+
   drawScore(score) {
     this.ctx.textAlign = 'right';
-    this.ctx.font = this.font.score;
+    this.ctx.font = this.font.text;
     this.ctx.lineWidth = this.lineWidth.thin;
     this.ctx.strokeStyle = this.colour.light;
     const text = `${score} POINTS`
