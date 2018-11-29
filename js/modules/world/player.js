@@ -29,9 +29,9 @@ class Player {
     this.node = new GravityParticle(this.position);
     this.speed = {
       current: new THREE.Vector3(),
-      x: {max: 10, blend: 0.125},
+      x: {max: 10, blend: 7.5}, // 0.125
       y: {max: 30},
-      z: {base: 10, max: 20, min: 5, blend: 0.04},
+      z: {base: 10, max: 20, min: 5, blend: 2.4}, // 0.04
       rotation: {}
     };
     this.jumpLock = {active: false, time: 0, timeout: 0.5, dir: 1};
@@ -70,8 +70,8 @@ class Player {
     const x = (this.keys.left ? 1 : 0) + (this.keys.right ? -1 : 0);
     const z = (this.keys.up ? 1 : 0) + (this.keys.down ? -1 : 0);
     const sz = (z == 1 ? this.speed.z.max : (z == -1 ? this.speed.z.min : this.speed.z.base)) + this.stat.speedIncrement;
-    this.speed.current.x = blend(this.speed.current.x, x * this.speed.x.max, this.speed.x.blend);
-    this.speed.current.z = blend(this.speed.current.z, sz, this.speed.z.blend);
+    this.speed.current.x = blend(this.speed.current.x, x * this.speed.x.max, Math.min(1, this.speed.x.blend * delta));
+    this.speed.current.z = blend(this.speed.current.z, sz, Math.min(1, this.speed.z.blend * delta));
 
     // jump
     if (this.jumpLock.active) {

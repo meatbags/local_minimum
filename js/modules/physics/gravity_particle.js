@@ -15,7 +15,7 @@ class GravityParticle {
     this.surface = this.up;
     this.inertia = new THREE.Vector3();
     this.limit = {negx: -16, posx: 16};
-    this.blend = {inertia: {z: 0.1}};
+    this.blend = {inertia: {z: 6}}; // 0.1
     this.scale = {inertia: {x: 5, y: 4, z: 9}};
   }
 
@@ -107,11 +107,11 @@ class GravityParticle {
       vz = (sign == 1 ? Math.max(0, vz) : Math.min(0, vz)) + Math.abs(vx * 1.5) * sign;
       this.inertia.x = vx;
       this.inertia.y = vy;
-      this.inertia.z = blend(this.inertia.z, vz, this.blend.inertia.z);
+      this.inertia.z = blend(this.inertia.z, vz, Math.min(1, delta * this.blend.inertia.z));
     } else {
-      this.inertia.y -= this.constants.gravity;
+      this.inertia.y -= this.constants.gravity * delta;
       if (this.position.y > this.floor) {
-        this.inertia.z -= this.inertia.z * this.constants.airResistance;
+        this.inertia.z -= this.inertia.z * this.constants.airResistance * delta;
       }
     }
 

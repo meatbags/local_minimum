@@ -19,7 +19,6 @@ class Explosion {
       const size = 0.1 + Math.random() * (particleSize || 0.25);
       const theta = Math.random() * Math.PI * 2;
       const speed = 10 + Math.random() * 30;
-
       obj.mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(size, 4, 4), new THREE.MeshBasicMaterial({color: 0xffffff}));
       obj.position = obj.mesh.position;
       obj.velocity = new THREE.Vector3(Math.cos(theta), Math.random() * 2 - 1, Math.sin(theta));

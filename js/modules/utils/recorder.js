@@ -25,7 +25,7 @@ class Recorder {
     if (!this.recordButton.classList.contains('active')) {
       this.resize();
       this.framesRecorded = 0;
-      this.capturer = new CCapture({framerate: this.frameRate, format: 'png'}); //verbose: true, motionBlurFrames: true
+      this.capturer = new CCapture({framerate: this.frameRate, format: 'png', motionBlurFrames: true}); //verbose: true, motionBlurFrames: true
       this.capturer.start();
       this.recording = true;
       this.recordButton.classList.add('active');
