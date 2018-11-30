@@ -13,6 +13,8 @@ class Map {
     this.materials = new Materials(this, 'assets');
     this.loader = new Loader('assets');
     this.offset = new THREE.Vector3(0, 0, 13);
+    this.size = 32;
+    this.z = 0;
     this.objects = [];
     this.age = 0;
     this.loadScene();
@@ -20,12 +22,18 @@ class Map {
 
   loadScene() {
     // load maps
-    this.plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(32, 32, 128, 128), this.materials.mat.grid);
+    this.plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(this.size, this.size, 128, 128), this.materials.mat.grid);
     this.plane.rotation.x = Math.PI / -2;
     this.plane.updateMatrix();
     this.plane.geometry.applyMatrix(this.plane.matrix);
     this.plane.rotation.x = 0;
     this.root.scene.add(this.plane);
+
+    // load models
+    this.loader.loadFBX('ship').then(obj => {
+      this.materials.conformObject(obj);
+      this.root.player.setMesh(obj);
+    });
 
     // reference
     this.ref = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2, 10, 0.2), new THREE.MeshBasicMaterial({color: 0x0000ff}));
@@ -39,7 +47,8 @@ class Map {
 
   update(delta) {
     this.materials.update(delta);
-    this.plane.position.z = this.root.player.position.z + this.offset.z;
+    this.z = this.root.player.position.z + this.offset.z;
+    this.plane.position.z = this.z;
 
     // test objects
     /*

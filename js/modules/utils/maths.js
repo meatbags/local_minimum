@@ -14,6 +14,10 @@ const easing = (t) => {
   }
 }
 
+const easingOut = (t) => {
+  return 1 - Math.pow(1 - t, 2);
+}
+
 const randomRange = (min, max) => {
   return (max - min) * Math.random() + min;
 };
@@ -30,4 +34,4 @@ const minAngleBetween = (a, b) => {
   return Math.atan2(Math.sin(b - a), Math.cos(b - a));
 }
 
-export { blend, clamp, easing, minAngleBetween, posterise, randomRange };
+export { blend, clamp, easing, easingOut, minAngleBetween, posterise, randomRange };

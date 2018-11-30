@@ -43,6 +43,7 @@ class Scene {
     this.player.update(delta);
     this.camera.update(delta);
     this.map.update(delta);
+    this.lighting.update(delta);
   }
 }
 

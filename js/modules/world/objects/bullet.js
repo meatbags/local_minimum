@@ -4,6 +4,7 @@
 
 import { GravityParticle } from '../../physics';
 import { Explosion } from './explosion';
+import { config } from './config';
 
 class Bullet {
   constructor(sceneRef, position, target) {
@@ -11,7 +12,9 @@ class Bullet {
     this.sceneRef = sceneRef;
     this.age = 0;
     this.maxAge = 0.6 + Math.random() * 0.8;
-    this.mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(0.25, 12, 12), new THREE.MeshBasicMaterial({}));
+
+    // bullet mesh
+    this.mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(0.15, 4, 4), config.mat.white);
     this.mesh.position.copy(position);
     this.position = this.mesh.position;
     this.velocity = target.clone();
@@ -19,9 +22,12 @@ class Bullet {
     this.velocity.normalize();
     this.velocity.multiplyScalar(30);
 
+    // rotate mesh
+    this.mesh.quaternion.setFromUnitVectors(config.vector.up, this.velocity.clone().normalize());
+    this.mesh.scale.y = 3 + Math.random() * 2;
+
     // add player velocity
     const pv = this.sceneRef.player.node.getTotalVelocity();
-    //pv.projectOnVector(this.velocity);
     this.velocity.add(pv);
 
     // create particle
@@ -36,7 +42,7 @@ class Bullet {
     if (this.active) {
       this.age += delta;
       if (this.age > this.maxAge) {
-        this.destroy();
+        this.destroy(false);
       }
 
       // move
@@ -44,11 +50,12 @@ class Bullet {
     }
   }
 
-  destroy() {
+  destroy(stop) {
+    const n = 2 + Math.floor(Math.random() * 3);
+    const v = stop ? new THREE.Vector3() : this.velocity;
+    this.sceneRef.map.add(new Explosion(this.sceneRef, this.position, v, n));
     this.sceneRef.scene.remove(this.mesh);
     this.active = false;
-    const parts = 2 + Math.floor(Math.random() * 3);
-    this.sceneRef.map.add(new Explosion(this.sceneRef, this.position, this.velocity, parts));
   }
 }
 

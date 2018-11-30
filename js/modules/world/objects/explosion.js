@@ -2,6 +2,8 @@
  ** Animated explosion.
  **/
 
+import { config } from './config';
+
 class Explosion {
   constructor(sceneRef, position, velocity, parts, particleSize) {
     this.sceneRef = sceneRef;
@@ -19,7 +21,7 @@ class Explosion {
       const size = 0.1 + Math.random() * (particleSize || 0.25);
       const theta = Math.random() * Math.PI * 2;
       const speed = 10 + Math.random() * 30;
-      obj.mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(size, 4, 4), new THREE.MeshBasicMaterial({color: 0xffffff}));
+      obj.mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(size, 4, 4), config.mat.white);
       obj.position = obj.mesh.position;
       obj.velocity = new THREE.Vector3(Math.cos(theta), Math.random() * 2 - 1, Math.sin(theta));
       obj.velocity.normalize();
@@ -51,7 +53,7 @@ class Explosion {
         obj.position.y += obj.velocity.y * delta;
         obj.position.z += obj.velocity.z * delta;
       } else {
-        obj.visible = false;
+        obj.mesh.visible = false;
       }
     });
 

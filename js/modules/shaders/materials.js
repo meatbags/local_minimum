@@ -9,7 +9,13 @@ class Materials {
     this.root = root;
     this.scene = root.root;
     this.path = `./${path}/`;
-    this.mat = {};
+    this.mat = {
+      loaded: {}
+    };
+
+    // load envmap
+    const envMapSources = ['posx', 'negx', 'posy', 'negy', 'posz', 'negz'].map(filename => `${this.path}envmap/${filename}.jpg`);
+    this.envMap = new THREE.CubeTextureLoader().load(envMapSources);
 
     // warped grid shader
     this.mat.grid = WarpShader;
@@ -18,6 +24,28 @@ class Materials {
     for (var i=0; i<16; ++i) {
       this.uniforms.points.value.push(new THREE.Vector3());
     }
+  }
+
+  conformObject(obj) {
+    // recursively conform object material/s
+    if (obj.type === 'Mesh') {
+      this.conformMaterial(obj.material);
+    } else if (obj.children) {
+      obj.children.forEach(child => {
+        this.conformObject(child);
+      });
+    }
+  }
+
+  conformMaterial(mat) {
+    // register material
+    if (this.mat.loaded[mat.name] === undefined) {
+      this.mat.loaded[mat.name] = mat;
+    }
+
+    // apply envmap
+    mat.envMap = this.envMap;
+    mat.envMapIntensity - 0.5;
   }
 
   update(delta) {

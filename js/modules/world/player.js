@@ -5,7 +5,7 @@
 import { Keyboard, Mouse } from '../utils';
 import { GravityParticle } from '../physics';
 import { Bullet } from './objects';
-import { blend, clamp, minAngleBetween } from '../utils/maths';
+import { blend, clamp, minAngleBetween, easingOut } from '../utils/maths';
 
 class Player {
   constructor(root) {
@@ -21,24 +21,33 @@ class Player {
     this.plane.rotation.x = Math.PI / -2;
 
     // meshes
-    this.mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(2, 0.125, 0.5), new THREE.MeshPhysicalMaterial({emissive: 0xffffff}));
-    this.ref = new THREE.Mesh(new THREE.BoxBufferGeometry(0.1, 1, 0.1), new THREE.MeshPhysicalMaterial({emissive: 0x444444}));
+    this.group = new THREE.Group();
 
     // physics
-    this.position = this.mesh.position;
+    this.position = this.group.position;
     this.node = new GravityParticle(this.position);
     this.speed = {
       current: new THREE.Vector3(),
       x: {max: 10, blend: 7.5}, // 0.125
       y: {max: 30},
-      z: {base: 10, max: 20, min: 5, blend: 2.4}, // 0.04
+      z: {base: 10, max: 20, min: 5, blend: 2.1}, // 0.035
       rotation: {}
     };
-    this.jumpLock = {active: false, time: 0, timeout: 0.5, dir: 1};
+    this.jumpLock = {active: false, time: 0, timeout: 0.6, dir: 1};
+
+    // animation
+    this.direction = new THREE.Vector3();
+    this.directionSmooth = new THREE.Vector3();
+    this.rotation = new THREE.Vector3();
+    this.orientation = new THREE.Vector3(0, 0, 1);
 
     // init
     this.resetStatus();
-    this.root.scene.add(this.mesh, this.ref, this.plane);
+    this.root.scene.add(this.group, this.plane);
+  }
+
+  setMesh(mesh) {
+    this.group.add(mesh);
   }
 
   resetStatus() {
@@ -66,14 +75,14 @@ class Player {
   }
 
   move(delta) {
-    // move
+    // process input
     const x = (this.keys.left ? 1 : 0) + (this.keys.right ? -1 : 0);
     const z = (this.keys.up ? 1 : 0) + (this.keys.down ? -1 : 0);
     const sz = (z == 1 ? this.speed.z.max : (z == -1 ? this.speed.z.min : this.speed.z.base)) + this.stat.speedIncrement;
     this.speed.current.x = blend(this.speed.current.x, x * this.speed.x.max, Math.min(1, this.speed.x.blend * delta));
     this.speed.current.z = blend(this.speed.current.z, sz, Math.min(1, this.speed.z.blend * delta));
 
-    // jump
+    // reset jump timer
     if (this.jumpLock.active) {
       this.jumpLock.time += delta;
       if (this.jumpLock.time > this.jumpLock.timeout) {
@@ -81,26 +90,33 @@ class Player {
         this.jumpLock.active = false;
       }
     }
+
+    // jump
     if (this.keys.space && !this.jumpLock.active) {
       this.keys.space = false;
       this.node.jump(this.speed.y.max);
       this.jumpLock.active = true;
       this.jumpLock.time = 0;
-      this.jumpLock.dir = this.speed.current.x > 0 ? -1 : 1;
+      this.jumpLock.dir = (this.speed.current.x == 0 ? (Math.random() > 0.5 ? -1 : 1) : (this.speed.current.x > 0 ? -1 : 1));
     }
 
-    // move on plane
+    // move player against plane
+    this.direction.copy(this.position);
     this.node.setVelocity(this.speed.current);
     this.node.move(delta, this.root.gravityNodes);
 
     // rotate model
-    const jumpAnim = this.jumpLock.active ? (this.jumpLock.time / this.jumpLock.timeout) * Math.PI * 2 * this.jumpLock.dir : 0;
-    this.mesh.rotation.z = -this.node.surface.x * Math.PI * 0.5 - x * Math.PI * 0.125 + jumpAnim;
-    this.mesh.rotation.x = -Math.atan2(this.node.inertia.y, this.node.inertia.z + this.node.velocity.z);
+    this.direction.sub(this.position).negate();
+    this.directionSmooth.x = blend(this.directionSmooth.x, this.direction.x, 0.2);
+    this.directionSmooth.y = blend(this.directionSmooth.y, this.direction.y, 0.2);
+    this.directionSmooth.z = blend(this.directionSmooth.z, this.direction.z, 0.2);
+    //this.orientation.x = -this.node.surface.x;
+    this.group.quaternion.setFromUnitVectors(this.orientation, this.directionSmooth);
+    const jumpAnim = this.jumpLock.active ? easingOut(this.jumpLock.time / this.jumpLock.timeout) * Math.PI * 2 * this.jumpLock.dir : 0;
+    this.rotation.z += minAngleBetween(this.rotation.z, -this.node.surface.x * Math.PI * 0.5) * 0.05;
+    this.group.rotation.z = this.rotation.z + jumpAnim;
 
-    // marker
-    this.ref.scale.y = Math.max(0.01, this.position.y - this.node.floor);
-    this.ref.position.set(this.position.x, this.position.y - this.ref.scale.y / 2, this.position.z);
+    // raytracing collision plane
     this.plane.position.x = this.position.x;
     this.plane.position.z = this.position.z;
   }

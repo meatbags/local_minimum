@@ -41,7 +41,7 @@ const WarpShader = new THREE.ShaderMaterial({
   fragmentShader: `
     #define GRID_THRESHOLD 0.08
     #define GRID_ALIAS 0.04
-    #define ODD_COLOUR 0.5
+    #define ODD_COLOUR 0.125
     #define PI 3.14159
     uniform vec2 offset;
     uniform vec2 step;
@@ -50,7 +50,9 @@ const WarpShader = new THREE.ShaderMaterial({
     varying vec2 vUV;
 
     float computeGridAlpha() {
-      float cell = floor((vP.x + offset.x) / step.x) + floor((vP.z + offset.y) / step.y);
+      float cx = (vP.x + offset.x) / step.x;
+      float cz = (vP.z + offset.y) / step.y;
+      float cell = floor(cx) + floor(cz);
       float base = (mod(cell, 2.0) > 0.5) ? ODD_COLOUR : 0.0;
       float x = mod(vP.x + offset.x, step.x);
       float z = mod(vP.z + offset.y, step.y);

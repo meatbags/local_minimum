@@ -6,6 +6,7 @@ import '../lib/glsl';
 
 class Renderer {
   constructor(scene) {
+    this.sceneRef = scene;
     this.scene = scene.scene;
     this.camera = scene.camera.camera;
     this.renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
@@ -13,6 +14,11 @@ class Renderer {
     this.renderer.gammaInput = true;
     this.renderer.gammaOutput = true;
     this.setSize();
+
+    // clipping plane
+    this.clipPadding = 4;
+    this.globalPlanes = [new THREE.Plane(new THREE.Vector3(0, 0, -1), 0)];
+    this.renderer.clippingPlanes = this.globalPlanes;
 
     // render passes
     const strength = 0.75;
@@ -53,6 +59,8 @@ class Renderer {
   }
 
   draw(delta) {
+    // set clipping
+    this.globalPlanes[0].constant = this.sceneRef.map.z + this.sceneRef.map.size / 2 + this.clipPadding;
     this.composer.render(delta);
     //this.renderer.render(this.scene, this.camera);
   }
